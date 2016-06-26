@@ -8,7 +8,7 @@ import java.util.*;
 
 public class Twitter {
     /** Initialize your data structure here. */
-    HashMap<Integer,HashMap<Integer,Integer>> followsMap = new  HashMap<Integer,HashMap<Integer,Integer>>();
+    HashMap<Integer,HashSet<Integer>> followsMap = new  HashMap<Integer,HashSet<Integer>>();
     HashMap<Integer,TweetNode> tweetsMap = new  HashMap<Integer,TweetNode>();
     long numTweet = 0;
    
@@ -42,7 +42,7 @@ public class Twitter {
                 queue.add(tweetsMap.get(userId));
                 
             if(followsMap.containsKey(userId)){               
-                for(int followee : followsMap.get(userId).keySet()){
+                for(int followee : followsMap.get(userId)){
                     if(tweetsMap.containsKey(followee)){
                         queue.add(tweetsMap.get(followee));
                     }
@@ -65,11 +65,11 @@ public class Twitter {
     public void follow(int followerId, int followeeId) {      
         if(followerId == followeeId) return;
         if(followsMap.containsKey(followerId)){
-            followsMap.get(followerId).put(followeeId,0);
+            followsMap.get(followerId).add(followeeId);
         }
         else{
-            HashMap<Integer,Integer> followeeMap = new  HashMap<Integer,Integer>();
-            followeeMap.put(followeeId,0);
+            HashSet<Integer> followeeMap = new  HashSet<Integer>();
+            followeeMap.add(followeeId);
             followsMap.put(followerId, followeeMap);
         }
     }
@@ -77,7 +77,7 @@ public class Twitter {
     /** Follower unfollows a followee. If the operation is invalid, it should be a no-op. */
     public void unfollow(int followerId, int followeeId) {
         if(followsMap.containsKey(followerId)){
-            if(followsMap.get(followerId).containsKey(followeeId)){
+            if(followsMap.get(followerId).contains(followeeId)){
                 followsMap.get(followerId).remove(followeeId);
             }
         }
